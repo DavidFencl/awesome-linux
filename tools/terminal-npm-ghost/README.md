@@ -71,3 +71,15 @@ echo hello-ghost-test
 - Not Fig/Carapace
 - Does not change production servers
 - Does not force `chsh -s /usr/bin/fish`
+
+## Colors (Fedora dark)
+
+Install ships `snippets/fedora-dark.fish` → `~/.config/fish/conf.d/awesome-linux-fedora-dark.fish`.
+
+It follows **Adwaita Dark**: muted gray text, one blue accent for commands, dim autosuggestions, soft red errors — not the default loud rainbow syntax.
+
+Re-apply anytime:
+
+```fish
+source ~/.config/fish/conf.d/awesome-linux-fedora-dark.fish
+```

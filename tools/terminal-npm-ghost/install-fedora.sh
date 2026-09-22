@@ -17,6 +17,8 @@ fi
 
 mkdir -p "${CONF_DIR}"
 cp "${SCRIPT_DIR}/snippets/config.fish" "${SNIPPET}"
+cp "${SCRIPT_DIR}/snippets/fedora-dark.fish" "${CONF_DIR}/awesome-linux-fedora-dark.fish"
+echo "==> Wrote ${CONF_DIR}/awesome-linux-fedora-dark.fish (Fedora dark / quieter colors)"
 echo "==> Wrote ${SNIPPET}"
 
 if [[ -f /usr/share/fish/completions/npm.fish ]]; then
