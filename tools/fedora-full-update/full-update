@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Refresh Fedora packages and Flatpaks in one shot.
+set -euo pipefail
+
+echo "==> dnf upgrade --refresh"
+sudo dnf upgrade --refresh -y
+
+if command -v flatpak >/dev/null 2>&1; then
+  echo "==> flatpak update"
+  flatpak update -y
+else
+  echo "==> flatpak not installed; skipping"
+fi
+
+echo "==> done"
