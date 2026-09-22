@@ -56,3 +56,7 @@ rm -rf ~/.local/share/blesh   # only if you do not use ble.sh elsewhere
 - Completes **script names** after `npm run` / `npm run-script`, not every npm subcommand.
 - If both npm’s own completion and this one are present, install wraps `_npm_completion` and merges script names.
 - This does **not** change fish/zsh; those shells already have stronger ecosystems for this UX.
+
+## Prefer fish instead?
+
+See [terminal-npm-ghost](../terminal-npm-ghost/) — recommended for Ptyxis (custom command = `fish`, no `chsh`).
