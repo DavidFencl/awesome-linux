@@ -1,58 +1,66 @@
 # awesome-linux — ble.sh faces for Fedora / Adwaita Dark
-# Source after ble.sh is loaded (from .blerc or conf snippet).
+# Only sets faces that exist on this ble build; unknown names are skipped.
+
+_awesome_ble_face() {
+  # usage: _awesome_ble_face NAME SPEC
+  local name="$1" spec="$2"
+  ble-face -s "$name" "$spec" 2>/dev/null || true
+}
 
 # Quiet line editing / regions
-ble-face -s region                 'fg=255,bg=60'
-ble-face -s region_match           'fg=255,bg=25'
-ble-face -s region_insert          'fg=33,bg=255'
-ble-face -s disabled               'fg=244'
-ble-face -s overwrite_mode         'fg=16,bg=75'
-ble-face -s vbell                  'reverse'
-ble-face -s vbell_erase            'bg=236'
-ble-face -s prompt_status_line     'fg=252,bg=238'
+_awesome_ble_face region                 'fg=255,bg=60'
+_awesome_ble_face region_match           'fg=255,bg=25'
+_awesome_ble_face region_insert          'fg=33,bg=255'
+_awesome_ble_face disabled               'fg=244'
+_awesome_ble_face overwrite_mode         'fg=16,bg=75'
+_awesome_ble_face vbell                  'reverse'
+_awesome_ble_face vbell_erase            'bg=236'
+_awesome_ble_face prompt_status_line     'fg=252,bg=238'
 
 # Syntax — muted, one blue accent, soft amber strings, soft red errors
-ble-face -s syntax_default         none
-ble-face -s syntax_command         'fg=75'            # Adwaita-ish blue
-ble-face -s syntax_quoted          'fg=178'           # soft amber
-ble-face -s syntax_quotation       'fg=178'
-ble-face -s syntax_escape          'fg=110'
-ble-face -s syntax_expr            'fg=110'
-ble-face -s syntax_error           'fg=167'           # soft red, no loud bg
-ble-face -s syntax_varname         'fg=180'
-ble-face -s syntax_delimiter       none
-ble-face -s syntax_param_expansion 'fg=146'
-ble-face -s syntax_history_expansion 'fg=180,bg=236'
-ble-face -s syntax_function_name   'fg=75'
-ble-face -s syntax_comment         'fg=244'
-ble-face -s syntax_glob            'fg=180'
-ble-face -s syntax_brace           'fg=246'
-ble-face -s syntax_tilde           'fg=110'
-ble-face -s syntax_document        'fg=244'
-ble-face -s syntax_document_begin  'fg=244'
+_awesome_ble_face syntax_default         none
+_awesome_ble_face syntax_command         'fg=75'
+_awesome_ble_face syntax_quoted          'fg=178'
+_awesome_ble_face syntax_quotation       'fg=178'
+_awesome_ble_face syntax_escape          'fg=110'
+_awesome_ble_face syntax_expr            'fg=110'
+_awesome_ble_face syntax_error           'fg=167'
+_awesome_ble_face syntax_varname         'fg=180'
+_awesome_ble_face syntax_delimiter       none
+_awesome_ble_face syntax_param_expansion 'fg=146'
+_awesome_ble_face syntax_history_expansion 'fg=180,bg=236'
+_awesome_ble_face syntax_function_name   'fg=75'
+_awesome_ble_face syntax_comment         'fg=244'
+_awesome_ble_face syntax_glob            'fg=180'
+_awesome_ble_face syntax_brace           'fg=246'
+_awesome_ble_face syntax_tilde           'fg=110'
+_awesome_ble_face syntax_document        'fg=244'
+_awesome_ble_face syntax_document_begin  'fg=244'
 
-# Commands — keep builtins calm (not bright red)
-ble-face -s command_builtin_dot    'fg=167'
-ble-face -s command_builtin        'fg=167'
-ble-face -s command_alias          'fg=75'
-ble-face -s command_function       'fg=75'
-ble-face -s command_file           'fg=252'
-ble-face -s command_keyword        'fg=110'
-ble-face -s command_jobs           'fg=110'
-ble-face -s command_directory      'fg=75,underline'
-ble-face -s filename_directory     'fg=75,underline'
-ble-face -s filename_executable    'fg=114'
-ble-face -s filename_link          'fg=110,underline'
-ble-face -s filename_orphan        'fg=167'
-ble-face -s filename_setuid        'fg=178'
-ble-face -s filename_other         none
-ble-face -s filename_warning       'fg=178'
-ble-face -s filename_ls_colors     none
+# Commands
+_awesome_ble_face command_builtin_dot    'fg=167'
+_awesome_ble_face command_builtin        'fg=167'
+_awesome_ble_face command_alias          'fg=75'
+_awesome_ble_face command_function       'fg=75'
+_awesome_ble_face command_file           'fg=252'
+_awesome_ble_face command_keyword        'fg=110'
+_awesome_ble_face command_jobs           'fg=110'
+_awesome_ble_face command_directory      'fg=75,underline'
+_awesome_ble_face filename_directory     'fg=75,underline'
+_awesome_ble_face filename_executable    'fg=114'
+_awesome_ble_face filename_link          'fg=110,underline'
+_awesome_ble_face filename_orphan        'fg=167'
+_awesome_ble_face filename_setuid        'fg=178'
+_awesome_ble_face filename_other         none
+_awesome_ble_face filename_warning       'fg=178'
+_awesome_ble_face filename_ls_colors     none
 
-# Ghost / auto-complete suggestion (dim gray)
-ble-face -s auto_complete          'fg=244'
-ble-face -s auto_complete_inset    'fg=244'
-ble-face -s menu_complete_match    'fg=75'
-ble-face -s menu_complete_selected 'fg=255,bg=25'
-ble-face -s menu_desc_match        'fg=244'
-ble-face -s menu_desc_selected     'fg=252,bg=25'
+# Ghost / menus (names must exist on this ble version)
+_awesome_ble_face auto_complete          'fg=244'
+_awesome_ble_face menu_complete_match    'fg=75'
+_awesome_ble_face menu_complete_selected 'fg=255,bg=25'
+_awesome_ble_face menu_desc_default      'fg=244'
+_awesome_ble_face menu_desc_quote        'fg=178'
+_awesome_ble_face menu_desc_type         'fg=110'
+
+unset -f _awesome_ble_face
