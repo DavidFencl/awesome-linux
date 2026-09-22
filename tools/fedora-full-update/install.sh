@@ -10,20 +10,26 @@ BASHRC="${HOME}/.bashrc"
 MARKER_BEGIN='# >>> awesome-linux fedora-full-update >>>'
 MARKER_END='# <<< awesome-linux fedora-full-update <<<'
 
-# Drop duplicate alias lines if present; prefer the PATH binary.
 if [[ -f "$BASHRC" ]]; then
-  tmp="$(mktemp)"
-  grep -v -E "^[[:space:]]*alias full-update=" "$BASHRC" >"$tmp" || true
-  mv "$tmp" "$BASHRC"
-fi
-
-if [[ -f "$BASHRC" ]] && ! grep -qF "$MARKER_BEGIN" "$BASHRC"; then
-  {
-    echo ""
-    echo "$MARKER_BEGIN"
-    echo "# full-update lives in ~/.local/bin (see awesome-linux/tools/fedora-full-update)"
-    echo "$MARKER_END"
-  } >>"$BASHRC"
+  python3 - <<'PY' "$BASHRC" "$MARKER_BEGIN" "$MARKER_END"
+import sys, re
+path, begin, end = sys.argv[1:4]
+text = open(path).read()
+# remove alias full-update lines
+text = re.sub(r"(?m)^[ \t]*alias full-update=.*\n?", "", text)
+# refresh marker block
+pattern = re.compile(re.escape(begin) + r".*?" + re.escape(end) + r"\n?", re.S)
+text = pattern.sub("", text)
+block = f"""{begin}
+# full-update lives in ~/.local/bin (see awesome-linux/tools/fedora-full-update)
+{end}
+"""
+if not text.endswith("\n"):
+    text += "\n"
+text += "\n" + block
+open(path, "w").write(text)
+print(f"==> cleaned aliases / markers in {path}")
+PY
 fi
 
 echo "Installed: $BIN_DIR/full-update"
