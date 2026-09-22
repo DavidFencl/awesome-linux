@@ -60,3 +60,15 @@ rm -rf ~/.local/share/blesh   # only if you do not use ble.sh elsewhere
 ## Prefer fish instead?
 
 See [terminal-npm-ghost](../terminal-npm-ghost/) — recommended for Ptyxis (custom command = `fish`, no `chsh`).
+
+## Colors (Fedora dark / bash + ble)
+
+`bash/ble-fedora-dark.bash` tones down ble.sh syntax highlighting to an **Adwaita Dark** palette (muted text, one blue accent, dim ghost). It loads automatically with the npm-script-ghost bashrc block.
+
+Do **not** `source` the fish theme files from bash — those are for fish only (`tools/terminal-npm-ghost`).
+
+Re-apply in an already-running ble session:
+
+```bash
+source ~/.config/awesome-linux/npm-script-ghost/ble-fedora-dark.bash
+```

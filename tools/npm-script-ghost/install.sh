@@ -28,6 +28,8 @@ install -m 0644 "$ROOT/bash/npm-run-scripts.bash" \
   "${HOME}/.config/awesome-linux/npm-script-ghost/npm-run-scripts.bash"
 install -m 0644 "$ROOT/bash/ble-npm-ghost.bash" \
   "${HOME}/.config/awesome-linux/npm-script-ghost/ble-npm-ghost.bash"
+install -m 0644 "$ROOT/bash/ble-fedora-dark.bash" \
+  "${HOME}/.config/awesome-linux/npm-script-ghost/ble-fedora-dark.bash"
 
 block=$(cat <<BLOCK
 $MARKER_BEGIN
