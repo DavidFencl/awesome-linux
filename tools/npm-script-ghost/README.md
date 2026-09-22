@@ -1,74 +1,79 @@
 # npm-script-ghost
 
-Ghost autofill for **`npm run <script>`** on **bash** (Fedora + Ptyxis).
+bash + [ble.sh](https://github.com/akinomyoga/ble.sh): ghost autofill for Tab completion, plus `npm run <script>` from nearest `package.json`. Includes Adwaita Dark–quiet ble faces.
 
-When you type a prefix of a script name from the nearest `package.json`, the rest appears as dim “ghost” text. **Tab** accepts it (same idea as fish / zsh-autosuggestions / ble.sh auto-complete).
+## Agent runbook
 
-## How it works
+### Preconditions
 
-1. **[ble.sh](https://github.com/akinomyoga/ble.sh)** — bash line editor with `complete_auto_complete` (ghost preview of Tab completion).
-2. **`npm-run-scripts.bash`** — completion that reads `scripts` from the nearest `package.json` (walks up from `$PWD`).
+- Fedora desktop, **bash** (user may use Ptyxis)
+- `git`, `make`, `gawk` for ble.sh build
+- `node` recommended for JSON script parsing
+- **Do not** source fish theme files from bash
 
-## Requirements
-
-- Fedora (or any Linux) with bash 4+
-- `git`, `make` (to fetch/build ble.sh)
-- `node` recommended (for reliable JSON parse); a crude fallback exists without it
-- Terminal: **Ptyxis** works fine (no special Ptyxis config)
-
-## Install
+### Install
 
 ```bash
+cd tools/npm-script-ghost
 ./install.sh
 ```
 
-Then open a **new** Ptyxis tab (or `source ~/.bashrc`).
+Installer: clones/builds ble.sh → `~/.local/share/blesh/out/ble.sh`, copies bash assets to `~/.config/awesome-linux/npm-script-ghost/`, injects marker block into `~/.bashrc` (after `/etc/bashrc` source).
 
-## Keys
+### Files touched
+
+| Path | Marker / notes |
+|------|----------------|
+| `~/.local/share/blesh/` | upstream ble.sh build (`out/ble.sh`) |
+| `~/.config/awesome-linux/npm-script-ghost/*.bash` | completion + faces |
+| `~/.bashrc` | `awesome-linux npm-script-ghost` |
+| `~/.blerc` | `awesome-linux ble-fedora-dark` (optional faces hook) |
+
+### Verify
+
+```bash
+test -f "$HOME/.local/share/blesh/out/ble.sh"
+test -f "$HOME/.config/awesome-linux/npm-script-ghost/npm-run-scripts.bash"
+test -f "$HOME/.config/awesome-linux/npm-script-ghost/ble-fedora-dark.bash"
+grep -F 'awesome-linux npm-script-ghost' "$HOME/.bashrc"
+# completion smoke (no ble required):
+bash --noprofile --norc -c '
+  source "$HOME/.config/awesome-linux/npm-script-ghost/npm-run-scripts.bash"
+  tmp=$(mktemp -d)
+  echo "{\"scripts\":{\"test\":\"true\",\"build\":\"true\"}}" > "$tmp/package.json"
+  cd "$tmp"
+  COMP_WORDS=(npm run te); COMP_CWORD=2; COMPREPLY=()
+  _awesome_linux_npm_run_complete
+  echo "COMPREPLY=${COMPREPLY[*]}"
+  [[ "${COMPREPLY[*]}" == *test* ]]
+  rm -rf "$tmp"
+'
+```
+
+Ghost UX: user opens **new Ptyxis tab**, types `npm run <prefix>`, Tab accepts. Agent cannot fully assert ghost rendering headlessly.
+
+### Uninstall
+
+```bash
+cd tools/npm-script-ghost
+./uninstall.sh
+```
+
+### Do not
+
+- Do not `chsh`
+- Do not `source tools/terminal-npm-ghost/snippets/fedora-dark.fish` from bash
+- Do not delete `~/.bash_profile` exports
+
+## Human notes
 
 | Key | Action |
 |-----|--------|
-| Type `npm run te` | Ghost shows e.g. `st` → full `test` if that script exists |
-| **Tab** | Accept the ghost completion (or cycle completions) |
-| **Right arrow** / end-of-line accept | ble.sh also accepts auto-complete with right arrow when the cursor is at the end (ble default) |
+| Tab | accept / cycle completion (incl. npm scripts) |
+| Right arrow / Ctrl-F / End | accept ble auto_complete ghost at EOL |
 
-Exact accept keys follow ble.sh defaults; Tab is the reliable one to document.
-
-## Try it
-
-```bash
-cd /path/to/any/node/project
-npm run<space><type-a-prefix>
-```
-
-## Uninstall
-
-1. Remove the `# >>> awesome-linux npm-script-ghost >>>` … `<<<` block from `~/.bashrc`.
-2. Optionally delete:
-
-```bash
-rm -rf ~/.config/awesome-linux/npm-script-ghost
-rm -rf ~/.local/share/blesh   # only if you do not use ble.sh elsewhere
-```
-
-## Notes
-
-- Completes **script names** after `npm run` / `npm run-script`, not every npm subcommand.
-- If both npm’s own completion and this one are present, install wraps `_npm_completion` and merges script names.
-- This does **not** change fish/zsh; those shells already have stronger ecosystems for this UX.
+Colors: `bash/ble-fedora-dark.bash` (Adwaita Dark muted palette).
 
 ## Prefer fish instead?
 
-See [terminal-npm-ghost](../terminal-npm-ghost/) — recommended for Ptyxis (custom command = `fish`, no `chsh`).
-
-## Colors (Fedora dark / bash + ble)
-
-`bash/ble-fedora-dark.bash` tones down ble.sh syntax highlighting to an **Adwaita Dark** palette (muted text, one blue accent, dim ghost). It loads automatically with the npm-script-ghost bashrc block.
-
-Do **not** `source` the fish theme files from bash — those are for fish only (`tools/terminal-npm-ghost`).
-
-Re-apply in an already-running ble session:
-
-```bash
-source ~/.config/awesome-linux/npm-script-ghost/ble-fedora-dark.bash
-```
+See [terminal-npm-ghost](../terminal-npm-ghost/).

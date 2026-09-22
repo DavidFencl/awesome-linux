@@ -1,37 +1,55 @@
 # fedora-full-update
 
-One command for a Fedora desktop refresh:
+Installs `~/.local/bin/full-update` to run `dnf upgrade --refresh` then `flatpak update`.
+
+## Agent runbook
+
+### Preconditions
+
+- Fedora (or dnf-based) desktop
+- `~/.local/bin` on PATH (Fedora default `.bashrc` usually OK)
+- Running `full-update` later needs interactive sudo for dnf
+
+### Install
 
 ```bash
-sudo dnf upgrade --refresh -y
-flatpak update -y   # skipped if flatpak is missing
-```
-
-This started life as a `~/.bashrc` alias (`full-update=...`) and is published here as a real script on `PATH`.
-
-## Install (Fedora)
-
-From this directory:
-
-```bash
+cd tools/fedora-full-update
 ./install.sh
 ```
 
-That copies `full-update` to `~/.local/bin/full-update` and removes duplicate `alias full-update=...` lines from `~/.bashrc` so the script wins.
+### Files touched
 
-Ensure `~/.local/bin` is on your `PATH` (Fedora’s default `.bashrc` already does this).
+| Path | Change | Marker |
+|------|--------|--------|
+| `~/.local/bin/full-update` | executable script | n/a |
+| `~/.bashrc` | removes `alias full-update=...`; adds note block | `awesome-linux fedora-full-update` |
 
-## Usage
+### Verify
+
+```bash
+test -x "$HOME/.local/bin/full-update"
+bash -lc 'type -a full-update' | head -5
+# expect: .../full-update is /home/.../.local/bin/full-update
+# must NOT be only an alias
+grep -F 'awesome-linux fedora-full-update' "$HOME/.bashrc"
+```
+
+Do **not** run `full-update` itself in unattended agent sessions (sudo password).
+
+### Uninstall
+
+```bash
+cd tools/fedora-full-update
+./uninstall.sh
+```
+
+### Do not
+
+- Do not leave duplicate `alias full-update=` in `~/.bashrc`
+- Do not run unattended `sudo dnf` without user present
+
+## Human notes
 
 ```bash
 full-update
-```
-
-You will be prompted for your sudo password for the `dnf` step.
-
-## Uninstall
-
-```bash
-rm -f ~/.local/bin/full-update
-# optional: remove the awesome-linux marker block from ~/.bashrc
 ```

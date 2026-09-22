@@ -1,85 +1,77 @@
 # terminal-npm-ghost
 
-Ghost autofill (gray suggested text) + npm script Tab completion for Fedora terminals, especially **Ptyxis**.
+**fish** ghost suggestions + `npm run` Tab completion, used as **Ptyxis custom command only** (login shell stays bash).
 
-## What you get
+## Agent runbook
 
-1. **Ghost text** — as you type, a gray suggestion appears (from history). Accept it without opening a completion menu.
-2. **`npm run <script>` Tab completion** — Tab expands script names from the nearest `package.json`.
+### Preconditions
 
-These use different keys:
+- Fedora + Ptyxis
+- Interactive sudo available for `dnf install fish` if missing
+- User OK with Ptyxis profile Custom command = `fish` (agent prints steps; does not force dconf)
 
-- **Ghost accept:** usually **Right Arrow** (or End / Ctrl-F)
-- **npm script completion:** **Tab** after `npm run ` (note the space)
-
-## Recommended approach (Fedora + Ptyxis + existing bash)
-
-**Use fish only inside Ptyxis** — do **not** change your login shell with `chsh`.
-
-| Option | Ghost text | npm `run` scripts | Fedora package | Keeps `~/.bash_profile` / ZED_BIN |
-|--------|------------|-------------------|----------------|-----------------------------------|
-| **fish via Ptyxis custom command** (recommended) | Built-in | Built-in npm completions | `dnf install fish` | Yes (bash stays login shell) |
-| zsh + zsh-autosuggestions | Plugin | npm + compinit | `dnf install zsh zsh-autosuggestions` | Yes if Ptyxis → zsh only |
-| bash + ble.sh | ble auto-complete | see [npm-script-ghost](../npm-script-ghost/) | ble.sh from upstream | Yes; wires into `~/.bashrc` |
-
-Ptyxis itself does not draw ghost suggestions — the **shell** does.
-
-## Quick install (recommended: fish + Ptyxis)
+### Diagnosis (run before install)
 
 ```bash
+bash tools/terminal-npm-ghost/docs/diagnosis-checklist.md 2>/dev/null || true
+# or run the commands inside docs/diagnosis-checklist.md
+command -v fish || true
+rpm -q fish ptyxis bash-completion
+dconf dump /org/gnome/Ptyxis/ 2>/dev/null | head -40
+```
+
+### Install
+
+```bash
+cd tools/terminal-npm-ghost
 ./install-fedora.sh
 ```
 
-Then in Ptyxis: Preferences → Profile → Command → Custom command: `fish`  
-(or one-off: `ptyxis --new-window -x fish`)
+Then instruct user (or document as remaining step):
 
-Open a **new** Ptyxis window.
+1. Ptyxis → Preferences → Profile → Command → Custom command: `fish`
+2. Or one-off: `ptyxis --new-window -x fish`
+3. Open a **new** window/tab
 
-## Verify
+### Files touched
 
-```fish
-cd ~/path/to/repo   # project with package.json
-npm run <Tab>       # lists script names
+| Path | Notes |
+|------|-------|
+| `dnf` package `fish` | sudo |
+| `~/.config/fish/conf.d/awesome-linux-npm-ghost.fish` | PATH / ZED_BIN mirrors |
+| `~/.config/fish/conf.d/awesome-linux-fedora-dark.fish` | Adwaita Dark colors |
 
-echo hello-ghost-test
-# type: echo hel   → gray suggestion; Right Arrow accepts
-```
+Does **not** modify `~/.bash_profile` or call `chsh`.
 
-## Accept keys (fish)
-
-| Action | Key |
-|--------|-----|
-| Accept full ghost suggestion | **Right Arrow**, End, or Ctrl-F |
-| Accept one word | Alt-Right / Alt-F |
-| npm / path completion | **Tab** |
-
-## Uninstall
+### Verify
 
 ```bash
+command -v fish
+test -f "$HOME/.config/fish/conf.d/awesome-linux-npm-ghost.fish"
+test -f "$HOME/.config/fish/conf.d/awesome-linux-fedora-dark.fish"
+test -f /usr/share/fish/completions/npm.fish
+# fish loads conf.d itself — do not source .fish files from bash
+fish -c 'echo fish_ok; type fish_add_path >/dev/null'
+```
+
+Ghost accept = **Right Arrow**; npm scripts = **Tab** after `npm run `. User confirms in Ptyxis.
+
+### Uninstall
+
+```bash
+cd tools/terminal-npm-ghost
 ./uninstall.sh
-# Ptyxis → Profile → Command → back to default
-# optional: sudo dnf remove fish
+# User: clear Ptyxis custom command back to default
 ```
 
-## Fallbacks
+### Do not
 
-- **Stay on bash:** [npm-script-ghost](../npm-script-ghost/) (ble.sh) or `snippets/bashrc-ble.sh`
-- **Prefer zsh:** `snippets/zshrc-snippet.zsh`
+- Do not `chsh -s /usr/bin/fish`
+- Do not tell the user to `source …fedora-dark.fish` from **bash**
+- Do not strip `ZED_BIN` from bash_profile
 
-## Scope
+## Human notes
 
-- Not Fig/Carapace
-- Does not change production servers
-- Does not force `chsh -s /usr/bin/fish`
+See [docs/accept-keys.md](docs/accept-keys.md), [docs/ptyxis.md](docs/ptyxis.md).
 
-## Colors (Fedora dark)
-
-Install ships `snippets/fedora-dark.fish` → `~/.config/fish/conf.d/awesome-linux-fedora-dark.fish`.
-
-It follows **Adwaita Dark**: muted gray text, one blue accent for commands, dim autosuggestions, soft red errors — not the default loud rainbow syntax.
-
-Re-apply anytime:
-
-```fish
-source ~/.config/fish/conf.d/awesome-linux-fedora-dark.fish
-```
+Bash fallback: [npm-script-ghost](../npm-script-ghost/).

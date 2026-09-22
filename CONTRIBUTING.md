@@ -1,6 +1,8 @@
 # Contributing
 
-1. Add a new directory under `tools/<kebab-name>/`.
-2. Include a `README.md` with: problem, solution, Fedora/Ptyxis notes, install, uninstall, keys/commands.
-3. Keep scripts POSIX-ish bash, `set -euo pipefail`, and idempotent installers.
-4. Open a PR with one tool (or one focused change) per PR when possible.
+This repo is **agent-focused**. Follow [AGENTS.md](AGENTS.md) when adding or changing tools.
+
+1. One tool per PR when possible (`tools/<kebab-id>/`).
+2. Include `## Agent runbook` with Install / Files touched / Verify / Uninstall / Do not.
+3. Marker-wrap all dotfile edits; keep install idempotent.
+4. Update the tools tables in `README.md` and `AGENTS.md`.

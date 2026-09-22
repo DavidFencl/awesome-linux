@@ -1,34 +1,24 @@
 # awesome-linux
 
-Tiny Linux tools and improvements I actually use — mostly **Fedora** desktop stuff (Ptyxis, bash/fish, local Node tooling).
+Tiny **Fedora desktop** tools meant to be **installed and maintained by coding agents**.
 
-Each entry under [`tools/`](tools/) is self-contained: a short README, an install script when useful, and the files you need to drop onto a machine.
+**Agents:** start at [AGENTS.md](AGENTS.md).  
+**Humans:** skim the table below; each tool README has an optional “Human notes” section.
 
 ## Tools
 
-| Tool | What it does |
-|------|----------------|
-| [fedora-full-update](tools/fedora-full-update/) | One command to refresh `dnf` and update Flatpaks |
-| [terminal-npm-ghost](tools/terminal-npm-ghost/) | **Recommended:** fish ghost autofill + `npm run` Tab via Ptyxis custom command (no `chsh`) |
-| [npm-script-ghost](tools/npm-script-ghost/) | Stay on bash: ble.sh ghost autofill + `package.json` script completion |
+| id | What | Agent entry |
+|----|------|-------------|
+| [fedora-full-update](tools/fedora-full-update/) | `full-update` → `dnf upgrade --refresh` + `flatpak update` | [runbook](tools/fedora-full-update/README.md#agent-runbook) |
+| [npm-script-ghost](tools/npm-script-ghost/) | bash + ble.sh ghost + `npm run` script completion | [runbook](tools/npm-script-ghost/README.md#agent-runbook) |
+| [terminal-npm-ghost](tools/terminal-npm-ghost/) | fish ghost via Ptyxis custom command (no `chsh`) | [runbook](tools/terminal-npm-ghost/README.md#agent-runbook) |
 
-## Principles
+## Non-goals
 
-- Prefer distro packages (`dnf`) over random curls when possible
-- Prefer **Ptyxis custom command** / user-level config over `chsh` so login shell and `~/.bash_profile` stay intact
-- Every tool ships install + uninstall notes
-- Document exact accept keys (ghost vs Tab completion are different)
-- Prefer small, readable shell; installers should be idempotent
-
-## Layout
-
-```
-tools/<name>/
-  README.md
-  install*.sh
-  ...
-```
+- Not a general awesome-list of links
+- Not server/production hardening
+- Not “change the user’s login shell” by default
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT — [LICENSE](LICENSE).
