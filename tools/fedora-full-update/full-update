@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Refresh Fedora packages and Flatpaks in one shot.
+# Refresh Fedora packages, Flatpaks, and installed coding CLIs.
 set -euo pipefail
 
 echo "==> dnf upgrade --refresh"
@@ -11,5 +11,16 @@ if command -v flatpak >/dev/null 2>&1; then
 else
   echo "==> flatpak not installed; skipping"
 fi
+
+for tool in grok pi codex claude; do
+  if command -v "$tool" >/dev/null 2>&1; then
+    echo "==> $tool update"
+    if ! "$tool" update; then
+      echo "==> warning: $tool update failed; continuing" >&2
+    fi
+  else
+    echo "==> $tool not installed; skipping"
+  fi
+done
 
 echo "==> done"

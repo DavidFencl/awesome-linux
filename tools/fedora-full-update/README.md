@@ -1,6 +1,8 @@
 # fedora-full-update
 
-Installs `~/.local/bin/full-update` to run `dnf upgrade --refresh` then `flatpak update`.
+Installs `~/.local/bin/full-update` to update Fedora packages, Flatpaks, and installed coding CLIs.
+
+After `dnf upgrade --refresh` and `flatpak update`, it runs `grok update`, `pi update`, `codex update`, and `claude update`. Missing CLIs are skipped. CLI update failures print warnings and do not stop later updates. Fedora and Flatpak update failures still stop the script.
 
 ## Agent runbook
 
